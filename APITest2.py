@@ -8,17 +8,19 @@
 from reaper_python import *
 import os, time
 
-# Calling another script. TODO: figure out the usual file I/O from Reascript.
-os.system("python writetest.py")
+# Calling another script. 
+# TODO: figure out the usual file I/O from Reascript.
+# TODO: figure out how to get terminal to wait so you can see the output.
+os.system("python writetest.py; ping -n 3 127.0.0.1 >nul")
 
-# The API test. WORKS.
+# The API test. --WORKS--
 # RPR_APITest();
 
-# Let's try inserting a new track. WORKS.
+# Let's try inserting a new track. --WORKS--
 # Shortcut: 40001.
 RPR_Main_OnCommand(40001, 0)
 
-# Let's try actually inserting a media item into the track. WORKS.
+# Let's try actually inserting a media item into the track. --WORKS--
 # http://wiki.cockos.com/wiki/index.php/RPR_AddMediaItemToTrack
 # CURR_PROJ = proj num, 1 = your current project. You can't have 0.
 # CURR_TRACK = track number, 0 = the first track; 1 = the second track, etc.
@@ -38,4 +40,36 @@ if RPR_CountSelectedTracks(CURR_PROJ) > 0:
         # is an empty media item. D_LENGTH = length of the item
         RPR_SetMediaItemInfo_Value(MediaItem, "D_LENGTH", 3.0)
 
-# TODO: insert mp3 file into Reaper track's media item.
+# Insert mp3 file into Reaper track's media item. --WORKS--
+# Also test pulling information from another file. --WORKS--
+# To call other files, etc. you probably need to specify the absolute path.
+# see http://wiki.cockos.com/wiki/index.php/RPR_InsertMedia
+# http://forum.cockos.com/archive/index.php/t-45037.html
+madeon_loc = ("C:\\Users\\Evan Chow\\Desktop\\turing_fm\\scr" +
+                "ipts\\APITest2_filenames.txt")
+with open(madeon_loc) as f:
+    madeon_file = f.readline()
+RPR_InsertMedia(madeon_file, 0)
+
+# Now, let's get rid of that empty media item we initially inserted. --WORKS--
+# Note that you need pointers to both the track and the item to delete.
+# In finding the tracks, you can think of them as a stack: if you push
+# an empty track, then a nonempty track, the nonempty will be at index 0 
+# and the empty will be at index 1.
+initial_track = RPR_GetTrack(CURR_PROJ, CURR_TRACK)
+empty_track_item = RPR_GetMediaItem(CURR_PROJ, 1)
+RPR_DeleteTrackMediaItem(initial_track, empty_track_item)
+
+# TODO
+# Let's add another track.
+
+# TODO
+# On that track just added, add another Madeon sample, but do it at
+# an offset of 3 beats.
+
+# TODO
+# Add fade-in, fade-out for that second MP3 track. See the Cockos link
+# from before, http://forum.cockos.com/archive/index.php/t-45037.html .
+
+
+
