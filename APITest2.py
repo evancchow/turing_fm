@@ -3,7 +3,9 @@
 # RPR_Main_OnCommand(actionnumber, 0)
 # http://wiki.cockos.com/wiki/index.php/ReaScript_API
 # Put "WORKS" at the end of a line if the lines work.
-# Keyboard shortcut: capslock button
+# Keyboard shortcut: F12
+# Make sure you save the project between running the script; history messes
+# some things up I think.
 
 from reaper_python import *
 import os, time
@@ -15,6 +17,10 @@ os.system("python writetest.py; ping -n 3 127.0.0.1 >nul")
 
 # The API test. --WORKS--
 # RPR_APITest();
+
+# Set cursor to beginning of the time (time 0).
+# Keep this at the beginning of your scripts to ensure things work correctly.
+RPR_SetEditCurPos(0, False, False)
 
 # Let's try inserting a new track. --WORKS--
 # Shortcut: 40001.
@@ -43,8 +49,11 @@ if RPR_CountSelectedTracks(CURR_PROJ) > 0:
 # Insert mp3 file into Reaper track's media item. --WORKS--
 # Also test pulling information from another file. --WORKS--
 # To call other files, etc. you probably need to specify the absolute path.
+# TODO: I suspect using absolute path works for calling an external script too.
 # see http://wiki.cockos.com/wiki/index.php/RPR_InsertMedia
 # http://forum.cockos.com/archive/index.php/t-45037.html
+# Note that the actual text file "APITest2_filenames.txt" cannot have trailing
+# newlines at the end (I think they gets into the actual filename)
 madeon_loc = ("C:\\Users\\Evan Chow\\Desktop\\turing_fm\\scr" +
                 "ipts\\APITest2_filenames.txt")
 with open(madeon_loc) as f:
@@ -60,12 +69,16 @@ initial_track = RPR_GetTrack(CURR_PROJ, CURR_TRACK)
 empty_track_item = RPR_GetMediaItem(CURR_PROJ, 1)
 RPR_DeleteTrackMediaItem(initial_track, empty_track_item)
 
-# TODO
 # Let's add another track.
+RPR_Main_OnCommand(40001, 0)
 
-# TODO
 # On that track just added, add another Madeon sample, but do it at
 # an offset of 3 beats.
+# RPR_InsertMedia: running "0" again inserts it on that new track.
+# with open(madeon_loc)as f:
+#     madeon_file2 = f.readline()
+# RPR_InsertMedia(madeon_file2, 0)
+
 
 # TODO
 # Add fade-in, fade-out for that second MP3 track. See the Cockos link
