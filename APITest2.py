@@ -72,7 +72,7 @@ empty_track_item = RPR_GetMediaItem(CURR_PROJ, 1)
 RPR_DeleteTrackMediaItem(initial_track, empty_track_item)
 
 # Set cursor offset vertically to where you'll insert the track.
-RPR_SetEditCurPos(2, False, False)
+RPR_SetEditCurPos(6, False, False)
 
 # Let's add another track.
 RPR_Main_OnCommand(40001, 0)
@@ -83,9 +83,13 @@ RPR_Main_OnCommand(40001, 0)
 madeon_file2 = file_names.readline().rstrip()
 RPR_InsertMedia(madeon_file2, 0)
 
-# TODO
 # Add fade-in, fade-out for that second MP3 track. See the Cockos link
 # from before, http://forum.cockos.com/archive/index.php/t-45037.html .
-
+# To simplify things: maybe do everything in order.
+fade_item_1 = RPR_GetMediaItem(CURR_PROJ, 0)
+RPR_SetMediaItemInfo_Value(fade_item_1, "D_FADEOUTLEN", 2.0)
+fade_item_2 = RPR_GetMediaItem(CURR_PROJ, 1)
+RPR_SetMediaItemInfo_Value(fade_item_2, "D_FADEINLEN", 1.5)
+RPR_SetMediaItemInfo_Value(fade_item_2, "D_FADEOUTLEN", 2.0)
 
 
