@@ -22,6 +22,11 @@ os.system("python writetest.py; ping -n 3 127.0.0.1 >nul")
 # Keep this at the beginning of your scripts to ensure things work correctly.
 RPR_SetEditCurPos(0, False, False)
 
+# Before doing stuff: open the file with the filenames.
+madeon_loc = ("C:\\Users\\Evan Chow\\Desktop\\turing_fm\\scr" +
+                "ipts\\APITest2_filenames.txt")
+file_names = open(madeon_loc)
+
 # Let's try inserting a new track. --WORKS--
 # Shortcut: 40001.
 RPR_Main_OnCommand(40001, 0)
@@ -53,11 +58,8 @@ if RPR_CountSelectedTracks(CURR_PROJ) > 0:
 # see http://wiki.cockos.com/wiki/index.php/RPR_InsertMedia
 # http://forum.cockos.com/archive/index.php/t-45037.html
 # Note that the actual text file "APITest2_filenames.txt" cannot have trailing
-# newlines at the end (I think they gets into the actual filename)
-madeon_loc = ("C:\\Users\\Evan Chow\\Desktop\\turing_fm\\scr" +
-                "ipts\\APITest2_filenames.txt")
-with open(madeon_loc) as f:
-    madeon_file = f.readline()
+# newlines at the end (affects filename), hence the rstrip().
+madeon_file = file_names.readline().rstrip()
 RPR_InsertMedia(madeon_file, 0)
 
 # Now, let's get rid of that empty media item we initially inserted. --WORKS--
@@ -69,16 +71,17 @@ initial_track = RPR_GetTrack(CURR_PROJ, CURR_TRACK)
 empty_track_item = RPR_GetMediaItem(CURR_PROJ, 1)
 RPR_DeleteTrackMediaItem(initial_track, empty_track_item)
 
+# Set cursor offset vertically to where you'll insert the track.
+RPR_SetEditCurPos(2, False, False)
+
 # Let's add another track.
 RPR_Main_OnCommand(40001, 0)
 
-# On that track just added, add another Madeon sample, but do it at
-# an offset of 3 beats.
-# RPR_InsertMedia: running "0" again inserts it on that new track.
-# with open(madeon_loc)as f:
-#     madeon_file2 = f.readline()
-# RPR_InsertMedia(madeon_file2, 0)
-
+# Add another Madeon sample at that new cursor offset in the new track
+# you just added.
+# RPR_InsertMedia: again, running "0" inserts it on that new track.
+madeon_file2 = file_names.readline().rstrip()
+RPR_InsertMedia(madeon_file2, 0)
 
 # TODO
 # Add fade-in, fade-out for that second MP3 track. See the Cockos link
